@@ -1,16 +1,25 @@
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 const cheerio = require('cheerio');
+require('dotenv').config();
+
 
 // Замініть 'YOUR_TELEGRAM_BOT_TOKEN' на токен вашого бота, який ви отримали від BotFather
-const token = '6367434367:AAGvct8MlPW3grS2Hy-vqOI6Mqs2eFP_hZs';
+const token = process.env.TELEGRAM_BOT_TOKEN;
 
 const bot = new TelegramBot(token, {polling: true});
 
+bot.onText(/\/start/, (msg) => {
+    bot.sendMessage(msg.chat.id, 'Hello!');
+});
 bot.on('message', async (msg) => {
 
     const chatId = msg.chat.id;
     const ids = msg.text.split('\n'); // Розділяємо вхідний текст на окремі ID
+
+    if (msg.text.toString().toLowerCase() === '/start') {
+        return;
+    }
 
     let responses = ids.map(async (id) => {
         try {
